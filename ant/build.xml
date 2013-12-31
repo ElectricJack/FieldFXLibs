@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="fieldfxlibs" default="release">
+    <property file="versions.properties" />
+
+    <property name="dist.dir" value="../dist" />
+    <target name="release" description="creates mega bundle of all packages">
+        <ant antfile="build.serialize.xml" />
+        <ant antfile="build.math.xml"      />
+        <ant antfile="build.lang.xml"      />
+        <ant antfile="build.util.xml"      />
+        <ant antfile="build.mesh.xml"      />
+        <ant antfile="build.net.xml"       />
+        
+        <zip destfile="${dist.dir}/fieldfxlibs-${version.core}.zip">
+            <zipgroupfileset dir="${dist.dir}">
+                <include name="fieldfx-serialize-${version.serialize}.zip" /> 
+                <include name="fieldfx-math-${version.math}.zip"           /> 
+                <include name="fieldfx-lang-${version.lang}.zip"           /> 
+                <include name="fieldfx-util-${version.util}.zip"           /> 
+                <include name="fieldfx-mesh-${version.mesh}.zip"           /> 
+                <include name="fieldfx-net-${version.net}.zip"             /> 
+            </zipgroupfileset>
+        </zip>
+
+        <delete dir="../build" />
+    </target>
+</project>

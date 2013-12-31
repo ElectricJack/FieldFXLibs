@@ -1,0 +1,54 @@
+
+// ---------------------------------------- //
+// @part name                               //
+// @author                                  //
+//                                          //
+//                                          //
+// ---------------------------------------- //
+
+
+units inches
+
+layer {
+  geometry: Outline {
+    add circle at <10in, 10in> radius 5in
+  }
+  geometry: Collada Mesh {
+    mesh "something.dae"
+  }
+  geometry: Collada Mesh {
+    mesh "something.dae"
+  }
+}
+
+stock: square block {
+  width:     10.00 in
+  height:    10.00 in
+  thickness:  0.24 in
+}
+
+
+Keyword   func            = root.add_keyword( "function" );
+Parsable  fumc_signature  = func.feed_to( "{" );
+Parsable  func_contents   = func.feed_to_matching( "}" );
+
+
+// -------------------------------------------------------------------------------- //
+function: pocket +poly2 at +depth (scalar) {
+  
+  Assert: (+poly2's normal dot up vector) is greater than zero. // This means 
+  the surface must be upward facing. // Return on violation.
+  
+  Assert: +depth is in active stock. Return on violation.
+  
+  Set: tool step = tool scalar * active tool diameter / 2.0.
+}
+
+
+pass: {
+  for each layer {
+    interpolate x: low to high
+  }
+}
+
+
