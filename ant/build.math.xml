@@ -3,7 +3,7 @@
     <property file="build.properties" />
     <property file="versions.properties"/>
     
-    <property name="project.name"        value="fieldfx-math" />
+    <property name="project.name"        value="ffx_math" />
     <property name="srcfolder.id"        value="math" />
     <property name="lib.version"         value="${version.math}" />
     <property name="lib.zip.comment"     value="${project.name} - Math Library v${lib.version}" />
@@ -59,7 +59,7 @@
                 </classpath>
                 <classpath>
                     <pathelement location="../lib/core.jar" />
-                    <pathelement location="${release.dir}/fieldfx-serialize.jar" />
+                    <pathelement location="${release.dir}/ffx_serialize.jar" />
                 </classpath>
         </javac>
     </target>
@@ -104,7 +104,7 @@
             <taglet name="ExampleTaglet" path="../res/code" />
             <classpath>
                 <pathelement location="../lib/core.jar" />
-                <pathelement location="${release.dir}/fieldfx-serialize.jar" />
+                <pathelement location="${release.dir}/ffx_serialize.jar" />
             </classpath>
             <packageset dir="${src.dir}" defaultexcludes="yes">
                 <include name="**" />

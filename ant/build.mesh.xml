@@ -3,7 +3,7 @@
     <property file="build.properties" />
     <property file="versions.properties"/>
 
-    <property name="project.name"     value="fieldfx-mesh" />
+    <property name="project.name"     value="ffx_mesh" />
     <property name="srcfolder.id"     value="mesh" />
     <property name="lib.version"      value="${version.mesh}" />
     <property name="lib.zip.comment"  value="${project.name} - Mesh Library v${lib.version}" />
@@ -60,9 +60,9 @@
                 </classpath>
                 <classpath>
                     <pathelement location="../lib/core.jar" />
-                    <pathelement location="${release.dir}/fieldfx-serialize.jar" />
-                    <pathelement location="${release.dir}/fieldfx-math.jar" />
-                    <pathelement location="${release.dir}/fieldfx-util.jar" />
+                    <pathelement location="${release.dir}/ffx_serialize.jar" />
+                    <pathelement location="${release.dir}/ffx_math.jar" />
+                    <pathelement location="${release.dir}/ffx_util.jar" />
                 </classpath>
         </javac>
     </target>
@@ -107,9 +107,9 @@
             <taglet name="ExampleTaglet" path="../res/code" />
             <classpath>
                 <pathelement location="../lib/core.jar" />
-                <pathelement location="${release.dir}/fieldfx-serialize.jar" />
-                <pathelement location="${release.dir}/fieldfx-math.jar" />
-                <pathelement location="${release.dir}/fieldfx-util.jar" />
+                <pathelement location="${release.dir}/ffx_serialize.jar" />
+                <pathelement location="${release.dir}/ffx_math.jar" />
+                <pathelement location="${release.dir}/ffx_util.jar" />
             </classpath>
             <packageset dir="${src.dir}" defaultexcludes="yes">
                 <include name="**" />

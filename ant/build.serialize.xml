@@ -3,7 +3,7 @@
     <property file="build.properties" />
     <property file="versions.properties" />
     
-    <property name="project.name"     value="fieldfx-serialize" />
+    <property name="project.name"     value="ffx_serialize" />
     <property name="srcfolder.id"     value="serialize" />
     <property name="lib.version"      value="${version.serialize}" />
     <property name="lib.zip.comment"  value="${project.name} - Serialization v${lib.version}" />

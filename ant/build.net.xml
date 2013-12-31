@@ -3,7 +3,7 @@
     <property file="build.properties" />
     <property file="versions.properties"/>
 
-    <property name="project.name"     value="fieldfx-net" />
+    <property name="project.name"     value="ffx_net" />
     <property name="srcfolder.id"     value="net" />
     <property name="lib.version"      value="${version.net}" />
     <property name="lib.zip.comment"  value="${project.name} - Peer to Peer Networking Library v${lib.version}" />
@@ -61,9 +61,9 @@
                     <pathelement location="../lib/core.jar" />
                     <pathelement location="../lib/json_simple-1.1.jar" />
                     <pathelement location="../lib/udp.jar" />
-                    <pathelement location="${release.dir}/fieldfx-serialize.jar" />
-                    <pathelement location="${release.dir}/fieldfx-math.jar" />
-                    <pathelement location="${release.dir}/fieldfx-util.jar" />
+                    <pathelement location="${release.dir}/ffx_serialize.jar" />
+                    <pathelement location="${release.dir}/ffx_math.jar" />
+                    <pathelement location="${release.dir}/ffx_util.jar" />
                 </classpath>
         </javac>
     </target>
@@ -110,9 +110,9 @@
                 <pathelement location="../lib/core.jar" />
                 <pathelement location="../lib/json_simple-1.1.jar" />
                 <pathelement location="../lib/udp.jar" />
-                <pathelement location="${release.dir}/fieldfx-serialize.jar" />
-                <pathelement location="${release.dir}/fieldfx-math.jar" />
-                <pathelement location="${release.dir}/fieldfx-util.jar" />
+                <pathelement location="${release.dir}/ffx_serialize.jar" />
+                <pathelement location="${release.dir}/ffx_math.jar" />
+                <pathelement location="${release.dir}/ffx_util.jar" />
             </classpath>
             <packageset dir="${src.dir}" defaultexcludes="yes">
                 <include name="**" />
