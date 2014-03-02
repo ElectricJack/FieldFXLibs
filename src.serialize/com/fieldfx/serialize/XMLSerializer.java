@@ -29,9 +29,7 @@ import java.util.List;
 public class XMLSerializer implements Serializer {
   
   private PApplet                       parent    = null;
-  //private XML                    xmlReader = null;
-  private XML xmlReader = null;
-
+  private XML                           xmlReader = null;
   private PrintWriter                   xmlWriter = null;
   private int                           depth     = 0;
   private HashMap<String, Serializable> types     = new HashMap<String, Serializable>();
@@ -82,7 +80,6 @@ public class XMLSerializer implements Serializer {
   public float serialize ( String name, float value ) {
     return serialize( name, value, 0.f );
   }
-  
   public float serialize ( String name, float value, float defaultValue ) {
     if( isLoading() ) {
       XML child = getChild( "float", name );
@@ -97,7 +94,6 @@ public class XMLSerializer implements Serializer {
   public int serialize ( String name, int value ) {
     return serialize( name, value, 0 );
   }
-  
   public int serialize ( String name, int value, int defaultValue ) {
     if( isLoading() ) {
       XML child = getChild( "int", name );

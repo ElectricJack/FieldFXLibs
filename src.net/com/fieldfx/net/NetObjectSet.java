@@ -32,6 +32,11 @@ import com.fieldfx.serialize.Serializer;
 // Encapsulates a set of NetObjects
 public class NetObjectSet implements Serializable {
   // -------------------------------------------------------------------------------- //
+  private NetMesh                 parent        = null;
+  private List<NetObject>         netObjects    = new ArrayList<NetObject>();
+  private Map<Integer, NetObject> idToNetObject = new TreeMap<Integer, NetObject>();
+  
+  // -------------------------------------------------------------------------------- //
   public String       getType ( ) { return "NetObjectSet"; }
   public Serializable clone   ( ) { return this;           }  
   // -------------------------------------------------------------------------------- //
@@ -79,9 +84,9 @@ public class NetObjectSet implements Serializable {
   
   // -------------------------------------------------------------------------------- //
   private void load( BinarySerializer s ) {
-    int numObjects = 0;
-    numObjects = s.serialize("numObjects", numObjects);
-    for(int i = 0; i < numObjects; ++i) {
+    int count = 0;
+    count = s.serialize("count", count);
+    for(int i = 0; i < count; ++i) {
       int objID = NetObject.invalid_id;
       Byte objType = 0;
       objID   = s.serialize( "id",   objID   );
@@ -90,7 +95,7 @@ public class NetObjectSet implements Serializable {
       // Look up the object
       NetObject obj = idToNetObject.get(objID);
       if(obj == null) {
-        System.out.println( "Creating object "+objID );
+        //System.out.println( "Creating object "+objID );
         obj = (NetObject)s.cloneByID(objType);
         obj.id = objID;
         addObject(obj);
@@ -127,7 +132,7 @@ public class NetObjectSet implements Serializable {
   }
   // -------------------------------------------------------------------------------- //
   private void save( BinarySerializer s ) {
-    s.serialize("numObjects", netObjects.size());
+    s.serialize("count", netObjects.size());
     for(NetObject obj : netObjects) {
       s.serialize( "id",        obj.id );
       s.serialize( "type",      s.getTypeIdFromType( obj.getType() ) );
@@ -136,8 +141,5 @@ public class NetObjectSet implements Serializable {
       obj.serialize( s );
     }
   }
-  // -------------------------------------------------------------------------------- //
-  private NetMesh         parent    = null;
-  private List<NetObject>         netObjects    = new ArrayList<NetObject>();
-  private Map<Integer, NetObject> idToNetObject = new TreeMap<Integer, NetObject>();
+
 }

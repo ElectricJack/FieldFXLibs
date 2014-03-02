@@ -21,84 +21,234 @@ package com.fieldfx.serialize;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 
+import processing.data.JSONObject;
+import processing.data.JSONArray;
+import processing.core.PApplet;
 
-public class JSONSerializer {
-  private HashMap<String, Serializable> types = new HashMap<String, Serializable>();
-  
+public class JSONSerializer implements Serializer {
+  private HashMap<String, Serializable>  types       = new HashMap<String, Serializable>();
+  private PApplet                        parent      = null;
+  private JSONObject                     root        = null;
+  private List<JSONObject>               parentStack = new ArrayList<JSONObject>();
+  private boolean                        loading     = false;
+
   // ------------------------------------------------------------ //
-  public void load ( String fileName, Serializable object ) {
-    
+  public JSONSerializer(PApplet parent) {
+    this.parent = parent;
   }
   // ------------------------------------------------------------ //
-  public void save ( String fileName, Serializable object ) {
-    
+  protected void pushParent(JSONObject parent) {
+    parentStack.add(parent);
+  }
+  // ------------------------------------------------------------ //
+  protected void popParent() {
+    parentStack.remove( parentStack.size() - 1 );
+  }
+  // ------------------------------------------------------------ //
+  protected JSONObject getActiveParent() {
+    if( parentStack.size() > 0 ) {
+      return parentStack.get( parentStack.size() - 1 );  
+    }
+    return null;
+  }
+  // ------------------------------------------------------------ //
+  public boolean isLoading() {
+    return loading;
+  }
+  // ------------------------------------------------------------ //
+  public void load ( String filePath, Serializable object ) {
+    root = parent.loadJSONObject( filePath );
+    pushParent(root);
+    load( object );
+    parentStack.clear();
+  }
+  private void load( Serializable object ) {
+    loading = true;
+    serialize( "root", object, true );
+  }
+  // ------------------------------------------------------------ //
+  public void save ( String filePath, Serializable object ) {
+    root = new JSONObject();
+    pushParent(root);
+    save( object );
+    parentStack.clear();
+    parent.saveJSONObject( root, filePath );
+  }
+  private void save( Serializable object ) {
+    loading = false;
+    serialize( "root", object, true );
   }
   
   // ------------------------------------------------------------ //  
   public void registerType ( Serializable type ) {
-    //types.put( type.getType(), type );
+    types.put( type.getType(), type );
   }
   
   // ------------------------------------------------------------ //
   public float serialize ( String name, float value ) {
     return serialize( name, value, 0.f );
   }
-  
   public float serialize ( String name, float value, float defaultValue ) {
     if( isLoading() ) {
-
+      // Get the child object with the same name and type
+      Object child = getChild( name );
+      if( child != null ) {
+        if( child instanceof Float ) {
+          return (Float)child;
+        } else if( child instanceof Double ) {
+          return ((Double)child).floatValue();
+        } else if( child instanceof Integer ) {
+          return ((Integer)child).floatValue();
+        }
+      }
     } else {
-
+      getActiveParent().setFloat( name, value );
+      return value;
     }
-    return value;
+    return defaultValue;
   }
   
   // ------------------------------------------------------------ //
   public int serialize ( String name, int value ) {
     return serialize( name, value, 0 );
   }
-  
   public int serialize ( String name, int value, int defaultValue ) {
-    return value;
+    if( isLoading() ) {
+      // Get the child object with the same name and type
+      Object child = getChild( name );
+      if( child != null && child instanceof Integer ) {
+        return (Integer)child;
+      }
+    } else {
+      getActiveParent().setInt( name, value );
+      return value;
+    }
+    return defaultValue;
   }
   
   // ------------------------------------------------------------ //
   public boolean serialize ( String name, boolean value ) {
-    return value;
+    return serialize(name, value, false);
   }
-  
+  public boolean serialize ( String name, boolean value, boolean defaultValue ) {
+    if( isLoading() ) {
+      // Get the child object with the same name and type
+      Object child = getChild( name );
+      if( child != null && child instanceof Boolean ) {
+        return (Boolean)child;
+      }
+    } else {
+      getActiveParent().setBoolean( name, value );
+      return value;
+    }
+    return defaultValue;
+  }
+
   // ------------------------------------------------------------ //
   public String serialize ( String name, String value ) {
-    return value;
+    return serialize(name, value, "");
   }
-  
-
-  
-  // ------------------------------------------------------------ //
-  public void serialize ( String name, Serializable object ) {
-    serialize( name, object, false );
-  }
-  
-  protected void serialize ( String name, Serializable object, boolean root ) {
+  public String serialize ( String name, String value, String defaultValue ) {
     if( isLoading() ) {
-
+      // Get the child object with the same name and type
+      Object child = getChild( name );
+      if( child != null && child instanceof String ) {
+        return (String)child;
+      }
     } else {
-
+      getActiveParent().setString( name, value );
+      return value;
     }
+    return defaultValue;
+  }
+
+  // ------------------------------------------------------------ //
+  public byte serialize ( String name, byte value ) {
+    return (byte)serialize( name, (byte)value, 0 );
+  }
+
+  // ------------------------------------------------------------ //
+  public Serializable serialize ( String name, Serializable object ) {
+    return serialize( name, object, false );
+  }
+  protected Serializable serialize ( String name, Serializable object, boolean root ) {
+    if( isLoading() ) {
+      // Get the child object with the same name and type
+      Object child = getChild( name );
+      if( child != null && child instanceof JSONObject ) {
+        pushParent((JSONObject)child);
+          object.serialize(this);
+        popParent();
+      }
+    } else {
+      // Create a new child container
+      // and serialize the object into the new container
+      JSONObject child = new JSONObject();
+      pushParent(child);
+        object.serialize(this);
+      popParent();
+
+      // Add the new child container to the parent
+      JSONObject parent = getActiveParent();
+      parent.setJSONObject( name, child );
+    }
+
+    return object;
   }
   
   // ------------------------------------------------------------ //
   public <T extends Serializable> void serialize ( String name, List<T> values ) {
+    // @TODO - Saving and loading arrays...
     if( isLoading() ) {
 
-    } else {
+      Object child = getChild( name );
+      if( child != null && child instanceof JSONArray ) {
+        values.clear();
+        JSONArray childArray = (JSONArray)child;
+        for( int i=0; i<childArray.size(); ++i ) {
+          JSONObject   childObj  = childArray.getJSONObject(i);
+          String       indexName = Integer.toString(i);
+          String       typeName  = childObj.getString("type");
+          Serializable template  = types.get( typeName );
+          T            object    = (T)template.clone();
 
+          pushParent(childObj);
+            serialize( indexName, object );
+          popParent();
+
+          values.add( object );
+        }
+      }
+    } else {
+      JSONArray childArray  = new JSONArray();
+      int       index       = 0;
+      for(T value : values) {
+        JSONObject child     = new JSONObject();
+        String     indexName = Integer.toString(index);
+
+        child.setString("type", value.getType());
+        pushParent(child);
+          serialize(indexName, value);
+        popParent();
+
+        childArray.setJSONObject(index, child);
+        ++index;
+      }
+
+      JSONObject parent = getActiveParent();
+      parent.setJSONArray( name, childArray );
     }
   }
-  
+
   // ------------------------------------------------------------ //
-  public boolean isLoading () {
-    return false;
+  private Object getChild ( String name ) {
+    JSONObject parent = getActiveParent();
+    if( parent != null && parent.keys().contains( name ) ) {
+      return parent.remove(name);
+    }
+    return null;
   }
+
 }
