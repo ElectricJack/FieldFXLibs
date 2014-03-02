@@ -20,7 +20,7 @@
  
 import com.fieldfx.serialize.*;
  
- int type = 1;
+int type = 3;
 
 // ------------------------------------------------------------ // 
 void setup() {
@@ -30,6 +30,7 @@ void setup() {
   
   if      ( type == 1 ) store = new XMLSerializer( this );
   else if ( type == 2 ) store = new BinarySerializer();
+  else if ( type == 3 ) store = new JSONSerializer(this);
   
   // Next register your serializable types so they
   //  can be instantiated on load. (Only required for list-serialization support)
@@ -61,6 +62,10 @@ void testLoading( Object obj, Serializer s ) {
     BinarySerializer store = (BinarySerializer)s;
                      store.load( bytes, data );
   }
+  else if( type == 3 ) {
+    JSONSerializer store = (JSONSerializer)s;
+    store.load("data.json", data);
+  }
   
   data.print();
 }
@@ -83,8 +88,11 @@ Object testSaving( Serializer s ) {
     byte[]           bytes = store.save( data );
     return           bytes;
   }
+  else if( type == 3 ) {
+    JSONSerializer store = (JSONSerializer)s;
+    store.save("data.json", data);
+  }
 
   return null;
 }
-
 
