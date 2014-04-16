@@ -40,7 +40,7 @@ public class JSONSerializer implements Serializer {
   }
   // ------------------------------------------------------------ //
   protected void pushParent(JSONObject parent) {
-    parentStack.add(parent);
+    parentStack.add( parent );
   }
   // ------------------------------------------------------------ //
   protected void popParent() {
@@ -64,6 +64,18 @@ public class JSONSerializer implements Serializer {
     load( object );
     parentStack.clear();
   }
+  // ------------------------------------------------------------ //
+  public void loadString( String data, Serializable object ) {
+    loadJSONObject(JSONObject.parse( data ), object);
+  }
+  // ------------------------------------------------------------ //
+  public void loadJSONObject( JSONObject jsonObject, Serializable object ) {
+    root = jsonObject;
+    pushParent(root);
+    load( object );
+    parentStack.clear();
+  }
+  // ------------------------------------------------------------ //
   private void load( Serializable object ) {
     loading = true;
     serialize( "root", object, true );
@@ -76,6 +88,19 @@ public class JSONSerializer implements Serializer {
     parentStack.clear();
     parent.saveJSONObject( root, filePath );
   }
+  // ------------------------------------------------------------ //
+  public String saveString( Serializable object ) {
+    return saveJSONObject(object).toString();
+  }
+  // ------------------------------------------------------------ //
+  public JSONObject saveJSONObject( Serializable object ) {
+    root = new JSONObject();
+    pushParent(root);
+    save( object );
+    parentStack.clear();
+    return root;
+  }
+  // ------------------------------------------------------------ //
   private void save( Serializable object ) {
     loading = false;
     serialize( "root", object, true );
@@ -91,6 +116,7 @@ public class JSONSerializer implements Serializer {
     return serialize( name, value, 0.f );
   }
   public float serialize ( String name, float value, float defaultValue ) {
+    System.out.println("serialize float " + name);
     if( isLoading() ) {
       // Get the child object with the same name and type
       Object child = getChild( name );
@@ -115,6 +141,7 @@ public class JSONSerializer implements Serializer {
     return serialize( name, value, 0 );
   }
   public int serialize ( String name, int value, int defaultValue ) {
+    System.out.println("serialize int " + name);
     if( isLoading() ) {
       // Get the child object with the same name and type
       Object child = getChild( name );
@@ -133,6 +160,7 @@ public class JSONSerializer implements Serializer {
     return serialize(name, value, false);
   }
   public boolean serialize ( String name, boolean value, boolean defaultValue ) {
+    System.out.println("serialize bool " + name);
     if( isLoading() ) {
       // Get the child object with the same name and type
       Object child = getChild( name );
@@ -151,6 +179,7 @@ public class JSONSerializer implements Serializer {
     return serialize(name, value, "");
   }
   public String serialize ( String name, String value, String defaultValue ) {
+    System.out.println("serialize value " + name);
     if( isLoading() ) {
       // Get the child object with the same name and type
       Object child = getChild( name );
@@ -174,19 +203,30 @@ public class JSONSerializer implements Serializer {
     return serialize( name, object, false );
   }
   protected Serializable serialize ( String name, Serializable object, boolean root ) {
+    System.out.println("serialize Object " + name);
     if( isLoading() ) {
-      // Get the child object with the same name and type
-      Object child = getChild( name );
-      if( child != null && child instanceof JSONObject ) {
-        pushParent((JSONObject)child);
-          object.serialize(this);
-        popParent();
+      try {
+        // Get the child object with the same name and type
+        Object child = getChild( name );
+        if( child != null && child instanceof JSONObject ) {
+          pushParent((JSONObject)child);
+            String typeName = serialize("type", "");
+            if( object == null ) {
+              Serializable template = types.get( typeName );
+              object = template.clone();
+            }
+            object.serialize(this);
+          popParent();
+        }
+      } catch(Exception e) {
+        e.printStackTrace();
       }
     } else {
       // Create a new child container
       // and serialize the object into the new container
       JSONObject child = new JSONObject();
       pushParent(child);
+        serialize("type", object.getType());
         object.serialize(this);
       popParent();
 
@@ -200,6 +240,7 @@ public class JSONSerializer implements Serializer {
   
   // ------------------------------------------------------------ //
   public <T extends Serializable> void serialize ( String name, List<T> values ) {
+    System.out.println("serialize List " + name);
     // @TODO - Saving and loading arrays...
     if( isLoading() ) {
 
