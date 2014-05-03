@@ -68,9 +68,15 @@ public class COLLADAReader implements Convertible {
   // ------------------------------------------------------------------------ //
   private void loadGeometries( XML geometries ) {
     for( XML geometry : geometries.getChildren() ) {
-      String id = geometry.getString("id");
-      for( XML mesh : geometry.getChildren() )
-        meshes.add( new COLLADAMesh( mesh, id ) );
+      
+      if( geometry.getName().equals("geometry") ) {
+        String id = geometry.getString("id");
+        for( XML mesh : geometry.getChildren() ) {
+          if( mesh.getName().equals("mesh") ) {
+            meshes.add( new COLLADAMesh( mesh, id ) );
+          }
+        }
+      }
     }
   }
 

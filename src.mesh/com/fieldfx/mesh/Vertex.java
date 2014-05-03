@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fieldfx.math.Vector3;
+import com.fieldfx.math.Vector2;
 //import com.fieldfx.util.Selectable;
 
 import com.fieldfx.serialize.Serializable;
@@ -31,8 +32,9 @@ import com.fieldfx.serialize.Serializer;
 
 public class Vertex extends Vector3 implements Serializable {
   
-  public  Normal n     = null;
-  private int    index = 0;
+  public  Vector2 uv    = new Vector2();
+  public  Normal  n     = null;
+  private int     index = 0;
   
   public  String getType   ( ) { return "vertex"; }
   public  int    getIndex  ( ) { return index; }

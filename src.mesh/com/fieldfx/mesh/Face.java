@@ -39,13 +39,15 @@ public class Face extends PolyLine implements Convertible, NamedSerializable {
   private   String           name   = "";
   
   // ------------------------------------------------------------------------------------- //
-  public  String            getType  ( )              { return "face"; }
-  public  int               getIndex ( )              { return index;  }
-  public  Vector3           getNormal( )              { return normal; }
-  public  List< PolyLine >  getHoles ( )              { return holes;  }
+  public  String            getType  ( )                { return "face"; }
+  public  int               getIndex ( )                { return index;  }
+  public  Vector3           getNormal( )                { return normal; }
+  public  List< PolyLine >  getHoles ( )                { return holes;  }
+  
+  public  void              setNormal( Vector3 normal ) { this.normal = normal; }
 
-  public  void              setName  ( String name )  { this.name = name; }
-  public  String            getName  ( )              { return name; }
+  public  void              setName  ( String name )    { this.name = name; }
+  public  String            getName  ( )                { return name; }
   
   // ------------------------------------------------------------------------------------- //
   public void addHole( PolyLine hole ) {

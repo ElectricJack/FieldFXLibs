@@ -40,7 +40,7 @@ public class COLLADAMesh extends Mesh {
     XML verts = mesh.getChild( "vertices" );
     if( verts != null ) {
       for( XML child : verts.getChildren() ) {
-        if( COLLADAHelpers.isNameOf( child, "input" ) ) {
+        if( child.getName().equals("input") ) {
           if      ( COLLADAHelpers.isAttribOf( child, "semantic", "POSITION" ) ) positionArrayID = child.getString("source");
           else if ( COLLADAHelpers.isAttribOf( child, "semantic", "NORMAL"   ) ) normalArrayID   = child.getString("source");
         }
@@ -48,14 +48,14 @@ public class COLLADAMesh extends Mesh {
     }
 
     for( XML child : mesh.getChildren() ) {
-      if( COLLADAHelpers.isNameOf( child, "source" ) ) {
+      if( child.getName().equals("source") ) {
         String childID = ("#" + child.getString("id"));
         if      ( childID.equals( positionArrayID ) ) loadPositions ( child );
         else if ( childID.equals( normalArrayID   ) ) loadNormals   ( child );
       }
-      else if ( COLLADAHelpers.isNameOf( child, "triangles" ) ) loadTriangles ( child );
-      else if ( COLLADAHelpers.isNameOf( child, "polylist"  ) ) loadPolylist  ( child );
-      else if ( COLLADAHelpers.isNameOf( child, "polygons"  ) ) loadPolygons  ( child );
+      else if ( child.getName().equals("triangles") ) loadTriangles ( child );
+      else if ( child.getName().equals("polylist")  ) loadPolylist  ( child );
+      else if ( child.getName().equals("polygons")  ) loadPolygons  ( child );
     }
   }
 
@@ -138,12 +138,12 @@ public class COLLADAMesh extends Mesh {
   // ------------------------------------------------------------------------ //
   private void loadPolygons( XML polygons ) {
     for( XML child : polygons.getChildren() ) {
-      if( COLLADAHelpers.isNameOf( child, "ph" ) ) {
+      if( child.getName().equals("ph") ) {
 
         Face poly = null;
         for( XML phChild : child.getChildren() ) {
-          if      ( COLLADAHelpers.isNameOf( phChild, "p" ) ) poly = loadPolygon( phChild );
-          else if ( COLLADAHelpers.isNameOf( phChild, "h" ) && poly != null ) poly.addHole( loadPolygon( phChild ) );
+          if      ( phChild.getName().equals("p") ) poly = loadPolygon( phChild );
+          else if ( phChild.getName().equals("h") && poly != null ) poly.addHole( loadPolygon( phChild ) );
         }
         
         // Finally, add the new polygon

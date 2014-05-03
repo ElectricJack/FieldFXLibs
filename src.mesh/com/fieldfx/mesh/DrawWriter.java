@@ -28,7 +28,7 @@ import java.util.Map;
 
 
 public class DrawWriter implements MeshBuilder {
-  private PGraphics                     drawer;
+  protected PGraphics                   drawer;
   private List<MeshBuilderStore>        objects         = new ArrayList<MeshBuilderStore>();
   private Map<String,MeshBuilderStore>  objectsByName   = new HashMap<String,MeshBuilderStore>();
   private MeshBuilderStore              activeObject    = null;
