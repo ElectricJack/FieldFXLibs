@@ -42,12 +42,19 @@ public class PolyLine implements Convertible, Serializable
   public    int             index  = 0;
   
   public            PolyLine ( )                { }  
-  public            PolyLine ( PolyLine other ) {
-  	this.index = other.index;
+  public            PolyLine ( PolyLine copy ) {
+    for( Vertex vert : copy.verts ) {
+      verts.add(vert.get());
+    }
+    for( Edge edge : copy.edges ) {
+      edges.add(edge.get());
+    }
+    this.index = copy.index;
   }
   
-  public 	String    getType  ( )              { return "PolyLine"; }
-  public 	int       getIndex ( )              { return index; }
+  public  String    getType  ( )              { return "PolyLine"; }
+  public  int       getIndex ( )              { return index; }
+  public  PolyLine  get      ( )              { return new PolyLine(this); }
   
   public  void      add      ( Vector3 v )    { this.add( new Vertex(v) ); }
   public  void      add      ( Vertex  v )    {

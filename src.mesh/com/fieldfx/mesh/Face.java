@@ -34,17 +34,34 @@ import com.fieldfx.util.NamedSerializable;
 public class Face extends PolyLine implements Convertible, NamedSerializable {
   
   protected List< PolyLine > holes  = null;
-  protected Vector3          normal = null;
+  protected Normal           normal = new Normal();
   public    int              index  = 0;
   private   String           name   = "";
   
+  public Face() {}
+  public Face(Face copy) {
+    super(copy);
+
+    if(copy.holes != null) {
+      holes = new ArrayList<PolyLine>();
+      for(PolyLine hole : copy.holes) {
+        holes.add( hole.get() );
+      }
+    }
+
+    normal.set(copy.normal);
+    index = copy.index;
+    name  = copy.name;
+  }
+
+  public  Face              get      ( )                { return new Face(this); }
   // ------------------------------------------------------------------------------------- //
   public  String            getType  ( )                { return "face"; }
   public  int               getIndex ( )                { return index;  }
   public  Vector3           getNormal( )                { return normal; }
   public  List< PolyLine >  getHoles ( )                { return holes;  }
   
-  public  void              setNormal( Vector3 normal ) { this.normal = normal; }
+  public  void              setNormal( Vector3 normal ) { this.normal.set(normal); }
 
   public  void              setName  ( String name )    { this.name = name; }
   public  String            getName  ( )                { return name; }
@@ -70,10 +87,22 @@ public class Face extends PolyLine implements Convertible, NamedSerializable {
   // ------------------------------------------------------------------------------------- //
   //@Override
   public void serialize(Serializer s) {
+    super.serialize(s);
     index = s.serialize( "index", index );
-    
     s.serialize( "normal", normal );
-    s.serialize( "holes",  holes  );
+
+    if( s.isLoading() ) {
+      holes = new ArrayList<PolyLine>();
+      s.serialize( "holes",  holes );
+      if( holes.size() == 0 ) {
+        holes = null;
+      }
+    } else {
+      if( holes != null ) {
+        s.serialize( "holes",  holes  );
+      }
+    }
+    
   }
   
   // ------------------------------------------------------------------------------------- //

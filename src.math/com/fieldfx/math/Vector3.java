@@ -37,9 +37,15 @@ public class Vector3 implements Serializable {
   public String       getType   ( )              { return "Vector3"; }
   public Serializable clone     ( )              { return new Vector3(); }
   public void         serialize ( Serializer s ) {
+    if(!s.isLoading()) {
+      if( Float.isNaN(x) ) { x = 0; }
+      if( Float.isNaN(y) ) { y = 0; }
+      if( Float.isNaN(z) ) { z = 0; }
+    }
     x = s.serialize("x", x);
     y = s.serialize("y", y);
     z = s.serialize("z", z);
+
   }
 
   // -------------------------------------------------------------------------------------------------------- //

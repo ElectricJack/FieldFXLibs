@@ -33,14 +33,29 @@ import com.fieldfx.serialize.Serializer;
 public class Vertex extends Vector3 implements Serializable {
   
   public  Vector2 uv    = new Vector2();
-  public  Normal  n     = null;
+  public  Normal  n     = new Normal(0.f, 0.f, 1.f);
   private int     index = 0;
+
+  public Vertex( float x, float y, float z ) { super(x,y,z); }
+  public Vertex( Vector3 v )                 { super(v); }
+  public Vertex( )                           { }
+  public Vertex(Vertex copy) {
+    this.set(copy);
+    uv.set(copy.uv);
+    n.set(copy.n);
+    index = copy.index;
+  }
   
-  public  String getType   ( ) { return "vertex"; }
-  public  int    getIndex  ( ) { return index; }
-  
-  // ----------------------------------------------------------------- //
-  public Vertex( float x, float y, float z ) { super(x,y,z); n = new Normal(0.f, 0.f, 1.f); }
-  public Vertex( Vector3 v )                 { super(v);     n = new Normal(0.f, 0.f, 1.f); }
-  public Vertex( )                           { n = new Normal(0.f, 0.f, 1.f); }
+  public  int         getIndex  ( ) { return index; }
+  public String       getType   ( ) { return "Vertex"; }
+  public Serializable clone     ( ) { return new Vertex(); }
+  public Vertex       get       ( ) { return new Vertex(this); }
+
+  public void serialize( Serializer s ) {
+    super.serialize(s);
+    s.serialize( "uv", uv );
+    s.serialize( "n",  n  );
+    index = s.serialize("index", index);
+  }
+
 }

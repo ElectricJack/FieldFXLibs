@@ -20,10 +20,20 @@
 package com.fieldfx.mesh;
 
 import com.fieldfx.math.Vector3;
+import com.fieldfx.serialize.Serializable;
+import com.fieldfx.serialize.Serializer;
 
-public class Normal extends Vector3 {
+
+public class Normal extends Vector3 implements Serializable {
 
   public Normal()                          { super(0.f,0.f,1.f); }
   public Normal(float x, float y, float z) { super(x,y,z); this.nrmeq(); }
+
+  public String       getType   ( ) { return "Normal"; }
+  public Serializable clone     ( ) { return new Normal(); }
+  
+  public void serialize( Serializer s ) {
+    super.serialize(s);
+  }
 
 }

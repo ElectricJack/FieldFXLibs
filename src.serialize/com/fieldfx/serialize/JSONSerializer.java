@@ -116,7 +116,7 @@ public class JSONSerializer implements Serializer {
     return serialize( name, value, 0.f );
   }
   public float serialize ( String name, float value, float defaultValue ) {
-    System.out.println("serialize float " + name);
+    //System.out.println("serialize float " + name);
     if( isLoading() ) {
       // Get the child object with the same name and type
       Object child = getChild( name );
@@ -141,7 +141,7 @@ public class JSONSerializer implements Serializer {
     return serialize( name, value, 0 );
   }
   public int serialize ( String name, int value, int defaultValue ) {
-    System.out.println("serialize int " + name);
+    //System.out.println("serialize int " + name);
     if( isLoading() ) {
       // Get the child object with the same name and type
       Object child = getChild( name );
@@ -160,7 +160,7 @@ public class JSONSerializer implements Serializer {
     return serialize(name, value, false);
   }
   public boolean serialize ( String name, boolean value, boolean defaultValue ) {
-    System.out.println("serialize bool " + name);
+    //System.out.println("serialize bool " + name);
     if( isLoading() ) {
       // Get the child object with the same name and type
       Object child = getChild( name );
@@ -179,7 +179,7 @@ public class JSONSerializer implements Serializer {
     return serialize(name, value, "");
   }
   public String serialize ( String name, String value, String defaultValue ) {
-    System.out.println("serialize value " + name);
+    //System.out.println("serialize value " + name);
     if( isLoading() ) {
       // Get the child object with the same name and type
       Object child = getChild( name );
@@ -203,7 +203,7 @@ public class JSONSerializer implements Serializer {
     return serialize( name, object, false );
   }
   protected Serializable serialize ( String name, Serializable object, boolean root ) {
-    System.out.println("serialize Object " + name);
+    //System.out.println("serialize Object " + name);
     if( isLoading() ) {
       try {
         // Get the child object with the same name and type
@@ -240,7 +240,7 @@ public class JSONSerializer implements Serializer {
   
   // ------------------------------------------------------------ //
   public <T extends Serializable> void serialize ( String name, List<T> values ) {
-    System.out.println("serialize List " + name);
+    //System.out.println("serialize List " + name);
     // @TODO - Saving and loading arrays...
     if( isLoading() ) {
 

@@ -40,6 +40,19 @@ public class Edge implements Serializable {
   public    float   bulge    = 0;
   protected int     index    = 0;
   
+  public Edge() {}
+  public Edge(Edge copy) {
+    if( copy.first    != null ) first    = copy.first.get();
+    if( copy.second   != null ) second   = copy.second.get();
+    if( copy.previous != null ) previous = copy.previous.get();
+    if( copy.next     != null ) next     = copy.next.get();
+    if( copy.inside   != null ) inside   = copy.inside.get();
+    if( copy.outside  != null ) outside  = copy.outside.get();
+    bulge = copy.bulge;
+    index = copy.index;
+  }
+
+  public Edge   get()      { return new Edge(this); }
   // ---------------------------------------------------------------- //
   public String getType()  { return "edge"; }
   public int    getIndex() { return index; }
@@ -57,12 +70,13 @@ public class Edge implements Serializable {
   // ---------------------------------------------------------------- //  
   @Override
   public void serialize( Serializer s ) {
-            s.serialize( "first",    first    );
-            s.serialize( "second",   second   );
-            s.serialize( "previous", previous );
-            s.serialize( "next",     next     );
-            s.serialize( "inside",   inside   );
-            s.serialize( "outside",  outside  );
+            //@TODO figure out best way to serialize references if they exist
+            // s.serialize( "first",    first    );
+            // s.serialize( "second",   second   );
+            // s.serialize( "previous", previous );
+            // s.serialize( "next",     next     );
+            // s.serialize( "inside",   inside   );
+            // s.serialize( "outside",  outside  );
     
     bulge = s.serialize( "bulge",    bulge    );
     index = s.serialize( "index",    index    );
