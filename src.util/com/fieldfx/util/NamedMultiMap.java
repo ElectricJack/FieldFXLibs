@@ -41,6 +41,11 @@ public class NamedMultiMap<T extends Nameable> extends AbstractCollection<T> {
   
   // ------------------------------------------------------------------------------------------------------------- //  
   public boolean add( T value ) {
+    addToMap( value );
+    indexToValue.add( value );
+    return true;
+  }
+  protected void addToMap( T value ) {
     if( nameToValue.containsKey( value.getName() ) ) {
       nameToValue.get( value.getName() ).add( value );
     } else {
@@ -48,8 +53,7 @@ public class NamedMultiMap<T extends Nameable> extends AbstractCollection<T> {
                    values.add( value );
       nameToValue.put( value.getName(), values );
     }
-    indexToValue.add( value );
-    return true;
+
   }
 
   // ------------------------------------------------------------------------------------------------------------- //

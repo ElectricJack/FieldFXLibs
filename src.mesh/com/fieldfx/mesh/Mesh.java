@@ -101,7 +101,7 @@ public class Mesh implements Convertible, Serializable {
     return verts;
   }
   // ------------------------------------------------------------------------------------------------------------- //
-  public NamedMultiMap<Face> getFaces() {
+  public SerializableMultiMap<Face> getFaces() {
     return faces;
   }
 
